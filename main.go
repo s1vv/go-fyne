@@ -1,7 +1,6 @@
 package main
 
 import (
-	"go-fyne/service"
 	"go-fyne/ui"
 
 	"fyne.io/fyne/v2"
@@ -10,13 +9,12 @@ import (
 
 func main() {
 	a := app.New()
-	w := a.NewWindow("Request Example")
-
-	appUI := ui.NewAppUI(service.FetchData)
-
-	w.SetContent(appUI.Layout)
+	w := a.NewWindow("MVC Example")
 	w.Resize(fyne.NewSize(600, 600))
 	w.SetFixedSize(true)
 
+	appUI := ui.NewAppUI()
+
+	w.SetContent(appUI.Layout)
 	w.ShowAndRun()
 }

@@ -1,25 +1,15 @@
 package ui
 
 import (
-	"fyne.io/fyne/v2"
+	"go-fyne/controller"
+	"go-fyne/viewiface"
+
 	"fyne.io/fyne/v2/widget"
 )
 
-func NewRequestButton(status *StatusBar, progress *ProgressBar, fetchFunc func() (string, error)) *widget.Button {
+func NewRequestButton(view viewiface.ViewInterface) *widget.Button {
+	ctrl := controller.NewAppController(view)
 	return widget.NewButton("Отправить запрос", func() {
-		progress.Show()
-		status.SetText("Загрузка...")
-
-		go func() {
-			result, err := fetchFunc()
-			fyne.Do(func() {
-				progress.Hide()
-				if err != nil {
-					status.SetText("Ошибка: " + err.Error())
-				} else {
-					status.SetText("Успех: " + result)
-				}
-			})
-		}()
+		ctrl.FetchAndDisplayData()
 	})
 }

@@ -6,25 +6,37 @@ import (
 )
 
 type AppUI struct {
-	Layout   *fyne.Container
-	status   *StatusBar
-	progress *ProgressBar
+	Layout      *fyne.Container
+	StatusBar   *StatusBar
+	ProgressBar *ProgressBar
 }
 
-func NewAppUI(fetchFunc func() (string, error)) *AppUI {
+func NewAppUI() *AppUI {
 	status := NewStatusBar()
 	progress := NewProgressBar()
-	button := NewRequestButton(status, progress, fetchFunc)
 
-	layout := container.NewVBox(
-		button,
-		progress.Widget,
-		status.Widget,
-	)
-
-	return &AppUI{
-		Layout:   layout,
-		status:   status,
-		progress: progress,
+	ui := &AppUI{
+		Layout:      container.NewVBox(),
+		StatusBar:   status,
+		ProgressBar: progress,
 	}
+
+	ui.Layout.Add(NewRequestButton(ui))
+	ui.Layout.Add(progress.Widget)
+	ui.Layout.Add(status.Widget)
+
+	return ui
+}
+
+// Реализация интерфейса
+func (a *AppUI) SetStatus(text string) {
+	a.StatusBar.SetText(text)
+}
+
+func (a *AppUI) ShowProgress() {
+	a.ProgressBar.Show()
+}
+
+func (a *AppUI) HideProgress() {
+	a.ProgressBar.Hide()
 }
