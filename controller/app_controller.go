@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"go-fyne/model"
+	"go-fyne/handlers"
 	"go-fyne/viewiface"
 
 	"fyne.io/fyne/v2"
@@ -19,8 +19,8 @@ func (c *AppController) RunFetch(mode string, args ...func() string) {
 	c.View.ShowProgress()
 	c.View.SetStatus("Загрузка...")
 	go func() {
-		result, err := model.FetchData(mode, args...)
-		fyne.CurrentApp().SendNotification(&fyne.Notification{Title: "Фетч завершён"})
+		result, err := handlers.FetchData(mode, args...)
+		fyne.CurrentApp().SendNotification(&fyne.Notification{Title: "Готово"})
 		fyne.Do(func() {
 			c.View.HideProgress()
 			if err != nil {
