@@ -7,9 +7,9 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func NewRequestButton(view viewiface.ViewInterface) *widget.Button {
+func NewButton(view viewiface.ViewInterface, nameBtn string, cmd string, args ...func() string) *widget.Button {
 	ctrl := controller.NewAppController(view)
-	return widget.NewButton("Отправить запрос", func() {
-		ctrl.FetchAndDisplayData()
+	return widget.NewButton(nameBtn, func() {
+		ctrl.RunFetch(cmd, args...)
 	})
 }
