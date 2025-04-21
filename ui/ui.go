@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"fmt"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
@@ -13,44 +15,50 @@ type FileSelector struct {
 }
 
 type AppUI struct {
-	Layout       *fyne.Container
-	StatusBar    *StatusBar
-	ProgressBar  *ProgressBar
-	FileSelector map[string]FileSelector
+	Layout        *fyne.Container
+	StatusBar     *StatusBar
+	ProgressBar   *ProgressBar
+	FileSelectors map[string]*FileSelector
+}
+
+func (ui *AppUI) GetPath(key string) string {
+	fs, ok := ui.FileSelectors[key]
+	for p := range ui.FileSelectors {
+		fmt.Println(ui.FileSelectors[p])
+	}
+	if !ok {
+		return ""
+	}
+	return fs.Path
 }
 
 func NewAppUI(win fyne.Window) *AppUI {
 	status := NewStatusBar()
 	progress := NewProgressBar()
-	var btnSelectFile1 FileSelector
-	var btnSelectFile2 FileSelector
-	fileSelecrors := map[string]FileSelector{
-		"selector1": *btnSelectFile1,
-		"selector2": *btnSelectFile2,
-	}
 
 	ui := &AppUI{
-		Layout:       container.NewVBox(),
-		StatusBar:    status,
-		ProgressBar:  progress,
-		FileSelector: fileSelecrors,
+		Layout:        container.NewVBox(),
+		StatusBar:     status,
+		ProgressBar:   progress,
+		FileSelectors: make(map[string]*FileSelector),
 	}
 
-	btnSelectFile1 = NewFileSelector(win, "Файл 1")
-	btnSelectFile1 = NewFileSelector(win, "Файл 1")
+	btnSelectFile1 := NewFileSelector(win, "file 1", ui)
+	btnSelectFile2 := NewFileSelector(win, "file 2", ui)
 
 	ui.Layout.Add(widget.NewLabel("Действия:"))
 	ui.Layout.Add(NewButton(
 		ui,
 		"Объединить файлы",
 		"python",
-		func() string { return ui.FileSelector["selector1"] },
-		func() string { return ui.file2Path },
+		func() string { return ui.GetPath("file 1") },
+		func() string { return ui.GetPath("file 2") },
 	)) // пути будут внутри обработчика
 	ui.Layout.Add(NewButton(ui, "Запрос get json", "network"))
 
 	ui.Layout.Add(widget.NewLabel("Файлы:"))
-
+	ui.Layout.Add(btnSelectFile1.Container)
+	ui.Layout.Add(btnSelectFile2.Container)
 	ui.Layout.Add(progress.Widget)
 	ui.Layout.Add(status.Widget)
 

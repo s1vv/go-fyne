@@ -2,11 +2,13 @@ package handlers
 
 import (
 	"errors"
+	"fmt"
 	"os/exec"
 )
 
 func mergeTxtFiles(args ...func() string) (string, error) {
 	if len(args[0]())+len(args[1]()) < 6 {
+		fmt.Println(args[0](), args[1]())
 		return "", errors.New("проверте пути к файлам")
 	}
 	cmd := exec.Command("python3", "scripts/merge.py", args[0](), args[1]())

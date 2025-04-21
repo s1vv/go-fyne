@@ -7,10 +7,11 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func NewFileSelector(win fyne.Window, title string, fs *AppUI) *FileSelector {
+func NewFileSelector(win fyne.Window, title string, ui *AppUI) *FileSelector {
 	label := widget.NewLabel(title + ": не выбран")
 	selector := &FileSelector{
 		Label: label,
+		Path:  "",
 	}
 
 	btn := widget.NewButton("Выбрать "+title, func() {
@@ -21,6 +22,7 @@ func NewFileSelector(win fyne.Window, title string, fs *AppUI) *FileSelector {
 			}
 		}, win)
 	})
+	ui.FileSelectors[title] = selector
 
 	selector.Container = container.NewVBox(btn, label)
 	return selector
